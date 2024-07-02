@@ -1,4 +1,6 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:local_notifier/local_notifier.dart';
 import 'package:pomo_app/pages/home.dart';
 import 'package:pomo_app/platform/database_provider.dart';
@@ -8,11 +10,16 @@ import 'package:window_manager/window_manager.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  // Must add this line.
+
+  LicenseRegistry.addLicense(() async* {
+    final license = await rootBundle.loadString('google_fonts/OFL.txt');
+    yield LicenseEntryWithLineBreaks(['google_fonts'], license);
+  });
+
   await windowManager.ensureInitialized();
 
   await localNotifier.setup(
-    appName: 'PomoApp',
+    appName: 'Pomo App',
     shortcutPolicy: ShortcutPolicy.requireCreate,
   );
 
