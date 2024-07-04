@@ -11,54 +11,97 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   Timer? _timer;
-  int _start = 1500;
+  int _seconds = 1500;
   int _step = 1;
+  int _pomos = 0;
 
   @override
   void initState() {
     super.initState();
-    createTimer();
+    setTimer();
   }
 
   @override
   void dispose() {
-    _timer?.cancel();
+    cancelTimer();
     super.dispose();
   }
 
-  void createTimer() {
+  void setTimer() {
     _timer = Timer.periodic(const Duration(seconds: 1), (Timer t) {
-      updateTimer();
-      if (_start == 0) {
-        t.cancel();
+      setState(() {
+        countdownTimer();
+        if (_seconds == 0) {
+          cancelTimer();
+          updateStep2();
+        }
+      });
+    });
+  }
+
+  void setPlayPause() {
+    setState(() {
+      if (_timer!.isActive) {
+        cancelTimer();
+      } else if (_seconds > 0) {
+        setTimer();
       }
     });
   }
 
-  void updateTimer() {
-    setState(() {
-      _start = _start - 1;
-    });
-  }
-
-  void setTimer() {
+  void setNewTimer() {
     if (_timer != null) {
       setState(() {
-        _timer?.cancel();
-        setStart();
-        createTimer();
+        cancelTimer();
+        updateTimer();
       });
     }
   }
 
-  void setStart() {
+  void setTimerOnOmit() {
+    setState(() {
+      cancelTimer();
+      updateStep2();
+    });
+  }
+
+  void countdownTimer() {
+    _seconds = _seconds - 1;
+  }
+
+  void cancelTimer() {
+    _timer?.cancel();
+  }
+
+  void updateTimer() {
     switch (_step) {
       case 1:
-        _start = 1500;
+        _seconds = 1500;
       case 2:
-        _start = 300;
+        _seconds = 3;
       case 3:
-        _start = 900;
+        _seconds = 900;
+    }
+  }
+
+  void updateStep2() {
+    switch (_step) {
+      case 1:
+        _pomos++;
+        if (_pomos == 3) {
+          _step = 3;
+          _seconds = 900;
+        } else {
+          _step = 2;
+          _seconds = 3;
+        }
+      case 2:
+        _seconds = 1500;
+        _step = 1;
+      case 3:
+        _seconds = 1500;
+        _pomos = 0;
+        _step = 1;
     }
   }
 
@@ -110,14 +153,31 @@ class _HomeState extends State<Home> {
                   onSelectionChanged: (Set<int> newSelection) {
                     setState(() {
                       _step = newSelection.first;
-                      setTimer();
+                      setNewTimer();
                     });
                   },
                 ),
                 Expanded(
                     child: Container(
                         padding: EdgeInsets.symmetric(vertical: size.width / 50, horizontal: size.height / 50),
-                        child: NumbersTimer(seconds: _start))),
+                        child: NumbersTimer(seconds: _seconds))),
+                Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    Align(
+                        alignment: Alignment.center,
+                        child: ElevatedButton.icon(
+                            icon: _timer!.isActive ? const Icon(Icons.pause_circle) : const Icon(Icons.play_circle),
+                            onPressed: setPlayPause,
+                            label: Text(_timer!.isActive ? 'Pause' : 'Play'))),
+                    Align(
+                        alignment: Alignment.centerRight,
+                        child: _timer!.isActive
+                            ? ElevatedButton.icon(
+                                label: const Text('Skip'), onPressed: setTimerOnOmit, icon: const Icon(Icons.skip_next))
+                            : const Spacer())
+                  ],
+                )
               ],
             )));
   }
