@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:pomo_app/queries/longs.dart';
 import 'package:pomo_app/queries/pomodoros.dart';
+import 'package:pomo_app/queries/shorts.dart';
 import 'package:pomo_app/widgets/numbers_timer.dart';
 import 'package:provider/provider.dart';
 
@@ -82,16 +84,16 @@ class _HomeState extends State<Home> {
       case 1:
         _seconds = 1500;
       case 2:
-        _seconds = 3;
+        _seconds = 300;
       case 3:
         _seconds = 900;
     }
   }
 
   void updateTimer() {
+    final db = Provider.of<DB>(context, listen: false);
     switch (_step) {
       case 1:
-        final db = Provider.of<DB>(context, listen: false);
         createPomodoro(db, 1500);
         _pomos++;
         if (_pomos == 3) {
@@ -102,9 +104,11 @@ class _HomeState extends State<Home> {
           _seconds = 3;
         }
       case 2:
+        createShorts(db, 300);
         _seconds = 1500;
         _step = 1;
       case 3:
+        createLongs(db, 900);
         _seconds = 1500;
         _pomos = 0;
         _step = 1;

@@ -1,5 +1,4 @@
 import 'package:flutter/foundation.dart';
-
 import '../platform/database.dart';
 
 Future<int> createPomodoro(DB db, int seconds) async {
