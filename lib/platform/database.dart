@@ -3,7 +3,7 @@ import 'package:drift/drift.dart';
 import 'package:drift/native.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as p;
-import 'package:pomo_app/models/Pomodoros_Tasks.dart';
+import 'package:pomo_app/models/pomodoros_tasks.dart';
 import 'package:pomo_app/models/longs.dart';
 import 'package:pomo_app/models/pomodoros.dart';
 import 'package:pomo_app/models/shorts.dart';

@@ -1,6 +1,10 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:pomo_app/queries/pomodoros.dart';
 import 'package:pomo_app/widgets/numbers_timer.dart';
+import 'package:provider/provider.dart';
+
+import '../platform/database.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -33,7 +37,7 @@ class _HomeState extends State<Home> {
         countdownTimer();
         if (_seconds == 0) {
           cancelTimer();
-          updateStep2();
+          updateTimer();
         }
       });
     });
@@ -53,7 +57,7 @@ class _HomeState extends State<Home> {
     if (_timer != null) {
       setState(() {
         cancelTimer();
-        updateTimer();
+        updateStep();
       });
     }
   }
@@ -61,7 +65,7 @@ class _HomeState extends State<Home> {
   void setTimerOnOmit() {
     setState(() {
       cancelTimer();
-      updateStep2();
+      updateTimer();
     });
   }
 
@@ -73,7 +77,7 @@ class _HomeState extends State<Home> {
     _timer?.cancel();
   }
 
-  void updateTimer() {
+  void updateStep() {
     switch (_step) {
       case 1:
         _seconds = 1500;
@@ -84,9 +88,11 @@ class _HomeState extends State<Home> {
     }
   }
 
-  void updateStep2() {
+  void updateTimer() {
     switch (_step) {
       case 1:
+        final db = Provider.of<DB>(context, listen: false);
+        createPomodoro(db, 1500);
         _pomos++;
         if (_pomos == 3) {
           _step = 3;
@@ -175,7 +181,7 @@ class _HomeState extends State<Home> {
                         child: _timer!.isActive
                             ? ElevatedButton.icon(
                                 label: const Text('Skip'), onPressed: setTimerOnOmit, icon: const Icon(Icons.skip_next))
-                            : const Spacer())
+                            : null)
                   ],
                 )
               ],
