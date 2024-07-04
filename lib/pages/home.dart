@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:pomo_app/queries/longs.dart';
 import 'package:pomo_app/queries/pomodoros.dart';
 import 'package:pomo_app/queries/shorts.dart';
+import 'package:pomo_app/widgets/flow_timer.dart';
 import 'package:pomo_app/widgets/numbers_timer.dart';
 import 'package:provider/provider.dart';
 
@@ -171,23 +172,7 @@ class _HomeState extends State<Home> {
                     child: Container(
                         padding: EdgeInsets.symmetric(vertical: size.width / 50, horizontal: size.height / 50),
                         child: NumbersTimer(seconds: _seconds))),
-                Stack(
-                  alignment: Alignment.center,
-                  children: [
-                    Align(
-                        alignment: Alignment.center,
-                        child: ElevatedButton.icon(
-                            icon: _timer!.isActive ? const Icon(Icons.pause_circle) : const Icon(Icons.play_circle),
-                            onPressed: setPlayPause,
-                            label: Text(_timer!.isActive ? 'Pause' : 'Play'))),
-                    Align(
-                        alignment: Alignment.centerRight,
-                        child: _timer!.isActive
-                            ? ElevatedButton.icon(
-                                label: const Text('Skip'), onPressed: setTimerOnOmit, icon: const Icon(Icons.skip_next))
-                            : null)
-                  ],
-                )
+                FlowTimer(isActive: _timer!.isActive, handlePlayPause: setPlayPause, handleOmit: setTimerOnOmit)
               ],
             )));
   }
