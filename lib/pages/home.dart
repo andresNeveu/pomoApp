@@ -4,6 +4,7 @@ import 'package:pomo_app/queries/longs.dart';
 import 'package:pomo_app/queries/pomodoros.dart';
 import 'package:pomo_app/queries/shorts.dart';
 import 'package:pomo_app/widgets/flow_timer.dart';
+import 'package:pomo_app/widgets/header.dart';
 import 'package:pomo_app/widgets/numbers_timer.dart';
 import 'package:pomo_app/widgets/steps_timer.dart';
 import 'package:provider/provider.dart';
@@ -121,35 +122,41 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Center(
-        child: Container(
-            width: size.width / 3,
-            height: size.height * 2 / 5,
-            padding: EdgeInsets.symmetric(vertical: size.width / 50, horizontal: size.height / 40),
-            decoration: BoxDecoration(
-              color: Colors.indigo[50],
-              boxShadow: const [
-                BoxShadow(
-                  color: Colors.grey,
-                  blurRadius: 1,
-                  offset: Offset(1, 1), // Shadow position
+      child: Column(
+        children: [
+          const Header(),
+          Container(
+              width: size.width / 3,
+              height: size.height * 2 / 5,
+              padding: EdgeInsets.symmetric(vertical: size.width / 50, horizontal: size.height / 40),
+              decoration: BoxDecoration(
+                color: Colors.indigo[50],
+                boxShadow: const [
+                  BoxShadow(
+                    color: Colors.grey,
+                    blurRadius: 1,
+                    offset: Offset(1, 1), // Shadow position
+                  ),
+                ],
+                borderRadius: BorderRadius.circular(
+                  5,
                 ),
-              ],
-              borderRadius: BorderRadius.circular(
-                5,
               ),
-            ),
-            child: Column(
-              children: [
-                StepsTimer(step: _step, setStep: setNewTimer),
-                Expanded(
-                    child: Container(
-                        padding: EdgeInsets.symmetric(vertical: size.width / 50, horizontal: size.height / 50),
-                        child: NumbersTimer(seconds: _seconds))),
-                FlowTimer(
-                    isActive: _timer != null && _timer!.isActive,
-                    handlePlayPause: setPlayPause,
-                    handleOmit: setTimerOnOmit)
-              ],
-            )));
+              child: Column(
+                children: [
+                  StepsTimer(step: _step, setStep: setNewTimer),
+                  Expanded(
+                      child: Container(
+                          padding: EdgeInsets.symmetric(vertical: size.width / 50, horizontal: size.height / 50),
+                          child: NumbersTimer(seconds: _seconds))),
+                  FlowTimer(
+                      isActive: _timer != null && _timer!.isActive,
+                      handlePlayPause: setPlayPause,
+                      handleOmit: setTimerOnOmit)
+                ],
+              )),
+        ],
+      ),
+    );
   }
 }
