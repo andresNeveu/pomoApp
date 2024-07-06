@@ -5,6 +5,7 @@ import 'package:pomo_app/queries/pomodoros.dart';
 import 'package:pomo_app/queries/shorts.dart';
 import 'package:pomo_app/widgets/flow_timer.dart';
 import 'package:pomo_app/widgets/numbers_timer.dart';
+import 'package:pomo_app/widgets/steps_timer.dart';
 import 'package:provider/provider.dart';
 
 import '../platform/database.dart';
@@ -25,7 +26,6 @@ class _HomeState extends State<Home> {
   @override
   void initState() {
     super.initState();
-    setTimer();
   }
 
   @override
@@ -48,21 +48,22 @@ class _HomeState extends State<Home> {
 
   void setPlayPause() {
     setState(() {
-      if (_timer!.isActive) {
+      if (_timer != null && _timer!.isActive) {
         cancelTimer();
-      } else if (_seconds > 0) {
+      } else {
         setTimer();
       }
     });
   }
 
-  void setNewTimer() {
-    if (_timer != null) {
-      setState(() {
+  void setNewTimer(Set<int> newSelection) {
+    setState(() {
+      _step = newSelection.first;
+      if (_timer != null) {
         cancelTimer();
-        updateStep();
-      });
-    }
+      }
+      updateStep();
+    });
   }
 
   void setTimerOnOmit() {
@@ -139,40 +140,15 @@ class _HomeState extends State<Home> {
             ),
             child: Column(
               children: [
-                SegmentedButton<int>(
-                  style: SegmentedButton.styleFrom(
-                      padding: EdgeInsets.symmetric(vertical: size.height / 60, horizontal: size.height / 100),
-                      textStyle: TextStyle(fontSize: size.height / 50)),
-                  segments: const <ButtonSegment<int>>[
-                    ButtonSegment<int>(
-                      value: 1,
-                      label: Text('Pomodoro'),
-                      icon: Icon(Icons.circle_outlined),
-                    ),
-                    ButtonSegment<int>(
-                      value: 2,
-                      label: Text('Short Break'),
-                      icon: Icon(Icons.circle_outlined),
-                    ),
-                    ButtonSegment<int>(
-                      value: 3,
-                      label: Text('Long Break'),
-                      icon: Icon(Icons.circle_outlined),
-                    ),
-                  ],
-                  selected: {_step},
-                  onSelectionChanged: (Set<int> newSelection) {
-                    setState(() {
-                      _step = newSelection.first;
-                      setNewTimer();
-                    });
-                  },
-                ),
+                StepsTimer(step: _step, setStep: setNewTimer),
                 Expanded(
                     child: Container(
                         padding: EdgeInsets.symmetric(vertical: size.width / 50, horizontal: size.height / 50),
                         child: NumbersTimer(seconds: _seconds))),
-                FlowTimer(isActive: _timer!.isActive, handlePlayPause: setPlayPause, handleOmit: setTimerOnOmit)
+                FlowTimer(
+                    isActive: _timer != null && _timer!.isActive,
+                    handlePlayPause: setPlayPause,
+                    handleOmit: setTimerOnOmit)
               ],
             )));
   }

@@ -16,7 +16,7 @@ class FlowTimer extends StatelessWidget {
             child: ElevatedButton.icon(
                 icon: isActive ? const Icon(Icons.pause_circle) : const Icon(Icons.play_circle),
                 onPressed: handlePlayPause,
-                label: Text(isActive ? 'Pause' : 'Play'))),
+                label: Text(isActive ? 'Pause' : 'Start'))),
         Align(
             alignment: Alignment.centerRight,
             child: isActive
