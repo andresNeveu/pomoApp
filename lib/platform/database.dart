@@ -3,6 +3,7 @@ import 'package:drift/drift.dart';
 import 'package:drift/native.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as p;
+import 'package:pomo_app/models/cache_settings.dart';
 import 'package:pomo_app/models/pomodoros_tasks.dart';
 import 'package:pomo_app/models/longs.dart';
 import 'package:pomo_app/models/pomodoros.dart';
@@ -19,10 +20,18 @@ LazyDatabase _openConnection() {
   });
 }
 
-@DriftDatabase(tables: [Pomodoros, Shorts, Longs, Tasks, PomodorosTasks])
+@DriftDatabase(tables: [Pomodoros, Shorts, Longs, Tasks, PomodorosTasks, CacheSettings])
 class DB extends _$DB {
   DB() : super(_openConnection());
 
   @override
-  int get schemaVersion => 2;
+  MigrationStrategy get migration => MigrationStrategy(
+      onCreate: (m) async {
+        await m.createAll();
+        await into(cacheSettings).insert(CacheSettingsCompanion.insert(pomodoro: 1500, short: 300, long: 900));
+      },
+      onUpgrade: (Migrator m, int from, int to) async {});
+
+  @override
+  int get schemaVersion => 1;
 }

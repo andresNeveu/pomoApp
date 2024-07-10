@@ -1037,6 +1037,252 @@ class PomodorosTasksCompanion extends UpdateCompanion<PomodorosTask> {
   }
 }
 
+class $CacheSettingsTable extends CacheSettings
+    with TableInfo<$CacheSettingsTable, CacheSetting> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $CacheSettingsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+      'id', aliasedName, false,
+      hasAutoIncrement: true,
+      type: DriftSqlType.int,
+      requiredDuringInsert: false,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('PRIMARY KEY AUTOINCREMENT'));
+  static const VerificationMeta _pomodoroMeta =
+      const VerificationMeta('pomodoro');
+  @override
+  late final GeneratedColumn<int> pomodoro = GeneratedColumn<int>(
+      'pomodoro', aliasedName, false,
+      type: DriftSqlType.int, requiredDuringInsert: true);
+  static const VerificationMeta _shortMeta = const VerificationMeta('short');
+  @override
+  late final GeneratedColumn<int> short = GeneratedColumn<int>(
+      'short', aliasedName, false,
+      type: DriftSqlType.int, requiredDuringInsert: true);
+  static const VerificationMeta _longMeta = const VerificationMeta('long');
+  @override
+  late final GeneratedColumn<int> long = GeneratedColumn<int>(
+      'long', aliasedName, false,
+      type: DriftSqlType.int, requiredDuringInsert: true);
+  @override
+  List<GeneratedColumn> get $columns => [id, pomodoro, short, long];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'cache_settings';
+  @override
+  VerificationContext validateIntegrity(Insertable<CacheSetting> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('pomodoro')) {
+      context.handle(_pomodoroMeta,
+          pomodoro.isAcceptableOrUnknown(data['pomodoro']!, _pomodoroMeta));
+    } else if (isInserting) {
+      context.missing(_pomodoroMeta);
+    }
+    if (data.containsKey('short')) {
+      context.handle(
+          _shortMeta, short.isAcceptableOrUnknown(data['short']!, _shortMeta));
+    } else if (isInserting) {
+      context.missing(_shortMeta);
+    }
+    if (data.containsKey('long')) {
+      context.handle(
+          _longMeta, long.isAcceptableOrUnknown(data['long']!, _longMeta));
+    } else if (isInserting) {
+      context.missing(_longMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  CacheSetting map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return CacheSetting(
+      id: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}id'])!,
+      pomodoro: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}pomodoro'])!,
+      short: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}short'])!,
+      long: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}long'])!,
+    );
+  }
+
+  @override
+  $CacheSettingsTable createAlias(String alias) {
+    return $CacheSettingsTable(attachedDatabase, alias);
+  }
+}
+
+class CacheSetting extends DataClass implements Insertable<CacheSetting> {
+  final int id;
+  final int pomodoro;
+  final int short;
+  final int long;
+  const CacheSetting(
+      {required this.id,
+      required this.pomodoro,
+      required this.short,
+      required this.long});
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['pomodoro'] = Variable<int>(pomodoro);
+    map['short'] = Variable<int>(short);
+    map['long'] = Variable<int>(long);
+    return map;
+  }
+
+  CacheSettingsCompanion toCompanion(bool nullToAbsent) {
+    return CacheSettingsCompanion(
+      id: Value(id),
+      pomodoro: Value(pomodoro),
+      short: Value(short),
+      long: Value(long),
+    );
+  }
+
+  factory CacheSetting.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return CacheSetting(
+      id: serializer.fromJson<int>(json['id']),
+      pomodoro: serializer.fromJson<int>(json['pomodoro']),
+      short: serializer.fromJson<int>(json['short']),
+      long: serializer.fromJson<int>(json['long']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'pomodoro': serializer.toJson<int>(pomodoro),
+      'short': serializer.toJson<int>(short),
+      'long': serializer.toJson<int>(long),
+    };
+  }
+
+  CacheSetting copyWith({int? id, int? pomodoro, int? short, int? long}) =>
+      CacheSetting(
+        id: id ?? this.id,
+        pomodoro: pomodoro ?? this.pomodoro,
+        short: short ?? this.short,
+        long: long ?? this.long,
+      );
+  @override
+  String toString() {
+    return (StringBuffer('CacheSetting(')
+          ..write('id: $id, ')
+          ..write('pomodoro: $pomodoro, ')
+          ..write('short: $short, ')
+          ..write('long: $long')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(id, pomodoro, short, long);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is CacheSetting &&
+          other.id == this.id &&
+          other.pomodoro == this.pomodoro &&
+          other.short == this.short &&
+          other.long == this.long);
+}
+
+class CacheSettingsCompanion extends UpdateCompanion<CacheSetting> {
+  final Value<int> id;
+  final Value<int> pomodoro;
+  final Value<int> short;
+  final Value<int> long;
+  const CacheSettingsCompanion({
+    this.id = const Value.absent(),
+    this.pomodoro = const Value.absent(),
+    this.short = const Value.absent(),
+    this.long = const Value.absent(),
+  });
+  CacheSettingsCompanion.insert({
+    this.id = const Value.absent(),
+    required int pomodoro,
+    required int short,
+    required int long,
+  })  : pomodoro = Value(pomodoro),
+        short = Value(short),
+        long = Value(long);
+  static Insertable<CacheSetting> custom({
+    Expression<int>? id,
+    Expression<int>? pomodoro,
+    Expression<int>? short,
+    Expression<int>? long,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (pomodoro != null) 'pomodoro': pomodoro,
+      if (short != null) 'short': short,
+      if (long != null) 'long': long,
+    });
+  }
+
+  CacheSettingsCompanion copyWith(
+      {Value<int>? id,
+      Value<int>? pomodoro,
+      Value<int>? short,
+      Value<int>? long}) {
+    return CacheSettingsCompanion(
+      id: id ?? this.id,
+      pomodoro: pomodoro ?? this.pomodoro,
+      short: short ?? this.short,
+      long: long ?? this.long,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (pomodoro.present) {
+      map['pomodoro'] = Variable<int>(pomodoro.value);
+    }
+    if (short.present) {
+      map['short'] = Variable<int>(short.value);
+    }
+    if (long.present) {
+      map['long'] = Variable<int>(long.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('CacheSettingsCompanion(')
+          ..write('id: $id, ')
+          ..write('pomodoro: $pomodoro, ')
+          ..write('short: $short, ')
+          ..write('long: $long')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$DB extends GeneratedDatabase {
   _$DB(QueryExecutor e) : super(e);
   _$DBManager get managers => _$DBManager(this);
@@ -1045,12 +1291,13 @@ abstract class _$DB extends GeneratedDatabase {
   late final $LongsTable longs = $LongsTable(this);
   late final $TasksTable tasks = $TasksTable(this);
   late final $PomodorosTasksTable pomodorosTasks = $PomodorosTasksTable(this);
+  late final $CacheSettingsTable cacheSettings = $CacheSettingsTable(this);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
   @override
   List<DatabaseSchemaEntity> get allSchemaEntities =>
-      [pomodoros, shorts, longs, tasks, pomodorosTasks];
+      [pomodoros, shorts, longs, tasks, pomodorosTasks, cacheSettings];
 }
 
 typedef $$PomodorosTableInsertCompanionBuilder = PomodorosCompanion Function({
@@ -1616,6 +1863,127 @@ class $$PomodorosTasksTableOrderingComposer
   }
 }
 
+typedef $$CacheSettingsTableInsertCompanionBuilder = CacheSettingsCompanion
+    Function({
+  Value<int> id,
+  required int pomodoro,
+  required int short,
+  required int long,
+});
+typedef $$CacheSettingsTableUpdateCompanionBuilder = CacheSettingsCompanion
+    Function({
+  Value<int> id,
+  Value<int> pomodoro,
+  Value<int> short,
+  Value<int> long,
+});
+
+class $$CacheSettingsTableTableManager extends RootTableManager<
+    _$DB,
+    $CacheSettingsTable,
+    CacheSetting,
+    $$CacheSettingsTableFilterComposer,
+    $$CacheSettingsTableOrderingComposer,
+    $$CacheSettingsTableProcessedTableManager,
+    $$CacheSettingsTableInsertCompanionBuilder,
+    $$CacheSettingsTableUpdateCompanionBuilder> {
+  $$CacheSettingsTableTableManager(_$DB db, $CacheSettingsTable table)
+      : super(TableManagerState(
+          db: db,
+          table: table,
+          filteringComposer:
+              $$CacheSettingsTableFilterComposer(ComposerState(db, table)),
+          orderingComposer:
+              $$CacheSettingsTableOrderingComposer(ComposerState(db, table)),
+          getChildManagerBuilder: (p) =>
+              $$CacheSettingsTableProcessedTableManager(p),
+          getUpdateCompanionBuilder: ({
+            Value<int> id = const Value.absent(),
+            Value<int> pomodoro = const Value.absent(),
+            Value<int> short = const Value.absent(),
+            Value<int> long = const Value.absent(),
+          }) =>
+              CacheSettingsCompanion(
+            id: id,
+            pomodoro: pomodoro,
+            short: short,
+            long: long,
+          ),
+          getInsertCompanionBuilder: ({
+            Value<int> id = const Value.absent(),
+            required int pomodoro,
+            required int short,
+            required int long,
+          }) =>
+              CacheSettingsCompanion.insert(
+            id: id,
+            pomodoro: pomodoro,
+            short: short,
+            long: long,
+          ),
+        ));
+}
+
+class $$CacheSettingsTableProcessedTableManager extends ProcessedTableManager<
+    _$DB,
+    $CacheSettingsTable,
+    CacheSetting,
+    $$CacheSettingsTableFilterComposer,
+    $$CacheSettingsTableOrderingComposer,
+    $$CacheSettingsTableProcessedTableManager,
+    $$CacheSettingsTableInsertCompanionBuilder,
+    $$CacheSettingsTableUpdateCompanionBuilder> {
+  $$CacheSettingsTableProcessedTableManager(super.$state);
+}
+
+class $$CacheSettingsTableFilterComposer
+    extends FilterComposer<_$DB, $CacheSettingsTable> {
+  $$CacheSettingsTableFilterComposer(super.$state);
+  ColumnFilters<int> get id => $state.composableBuilder(
+      column: $state.table.id,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get pomodoro => $state.composableBuilder(
+      column: $state.table.pomodoro,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get short => $state.composableBuilder(
+      column: $state.table.short,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get long => $state.composableBuilder(
+      column: $state.table.long,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+}
+
+class $$CacheSettingsTableOrderingComposer
+    extends OrderingComposer<_$DB, $CacheSettingsTable> {
+  $$CacheSettingsTableOrderingComposer(super.$state);
+  ColumnOrderings<int> get id => $state.composableBuilder(
+      column: $state.table.id,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get pomodoro => $state.composableBuilder(
+      column: $state.table.pomodoro,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get short => $state.composableBuilder(
+      column: $state.table.short,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get long => $state.composableBuilder(
+      column: $state.table.long,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+}
+
 class _$DBManager {
   final _$DB _db;
   _$DBManager(this._db);
@@ -1629,4 +1997,6 @@ class _$DBManager {
       $$TasksTableTableManager(_db, _db.tasks);
   $$PomodorosTasksTableTableManager get pomodorosTasks =>
       $$PomodorosTasksTableTableManager(_db, _db.pomodorosTasks);
+  $$CacheSettingsTableTableManager get cacheSettings =>
+      $$CacheSettingsTableTableManager(_db, _db.cacheSettings);
 }
