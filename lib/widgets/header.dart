@@ -21,7 +21,6 @@ class Header extends StatelessWidget {
       padding: EdgeInsets.symmetric(horizontal: size.width / 3, vertical: 0),
       color: Theme.of(context).colorScheme.inversePrimary,
       child: Row(
-        mainAxisSize: MainAxisSize.max,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(

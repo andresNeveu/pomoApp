@@ -3,5 +3,6 @@ import 'package:provider/provider.dart';
 
 var databaseProvider = Provider<DB>(
   create: (context) => DB(),
+  lazy: false,
   dispose: (context, db) => db.close(),
 );

@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:local_notifier/local_notifier.dart';
 import 'package:pomo_app/pages/home.dart';
-import 'package:pomo_app/platform/database_provider.dart';
+import 'package:pomo_app/providers/database_provider.dart';
+import 'package:pomo_app/providers/settings_provider.dart';
 import 'package:pomo_app/style/theme_app.dart';
 import 'package:provider/provider.dart';
 import 'package:window_manager/window_manager.dart';
@@ -28,7 +29,7 @@ Future<void> main() async {
     await windowManager.focus();
   });
 
-  runApp(MultiProvider(providers: [databaseProvider], child: const App()));
+  runApp(MultiProvider(providers: [databaseProvider, settingProvider], child: const App()));
 }
 
 class App extends StatelessWidget {
